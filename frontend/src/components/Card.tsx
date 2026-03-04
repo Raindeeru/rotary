@@ -20,4 +20,3 @@ export function Card({ title, description, status }: CardProps) {
     </article>
   );
 }
-
