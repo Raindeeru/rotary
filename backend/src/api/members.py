@@ -50,7 +50,6 @@ class AdminMemberUpdate(MemberProfileUpdate):
     role: Optional[str] = None
     status: Optional[str] = None
 
-
 class PasswordChangeRequest(BaseModel):
     current_password: str
     new_password: str = Field(..., min_length=8)
@@ -136,10 +135,6 @@ async def change_password(
         )
 
     return {"message": "Password updated successfully."}
-
-
-
-router = APIRouter(prefix="/members", tags=["Members Directory"])
 
 
 @router.get("/public", response_model=List[MemberPublicResponse])
