@@ -1,5 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { AdminNavbar, AdminTab } from '../components/AdminNavbar';
+import { ProfileTab } from '../components/ProfileTab';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -299,7 +300,13 @@ export function AdminDashboardPage() {
           )}
           {activeTab === 'projects' && <PlaceholderTab name="Projects" />}
           {activeTab === 'events'   && <PlaceholderTab name="Events" />}
-          {activeTab === 'profile'  && <PlaceholderTab name="Profile" />}
+          {activeTab === 'profile'  && (
+            <>
+              <h1 className="dashboard__title">Profile</h1>
+              <p className="dashboard__subtitle">Manage your personal information and password.</p>
+              <ProfileTab />
+            </>
+          )}
         </div>
       </main>
     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MemberNavbar, MemberTab } from '../components/MemberNavbar';
+import { ProfileTab } from '../components/ProfileTab';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -236,7 +237,13 @@ export function MemberDashboardPage() {
               <EventsTab />
             </>
           )}
-          {activeTab === 'profile' && <PlaceholderTab name="Profile" />}
+          {activeTab === 'profile' && (
+            <>
+              <h1 className="dashboard__title">Profile</h1>
+              <p className="dashboard__subtitle">Manage your personal information and password.</p>
+              <ProfileTab />
+            </>
+          )}
         </div>
       </main>
     </div>
