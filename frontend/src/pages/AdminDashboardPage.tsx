@@ -121,6 +121,14 @@ function MembersTab() {
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
   const [inviteLoading, setInviteLoading] = useState(false);
 
+  // Edit modal state
+  const [editingMember, setEditingMember] = useState<Member | null>(null);
+  const [editFormData, setEditFormData] = useState({ name: '', email: '', role: '', status: '', vocation: '' });
+  const [editError, setEditError] = useState<string | null>(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   async function loadMembers() {
     try {
       const res = await fetch(`${API_BASE}/members/`, { headers: authHeaders() });
@@ -166,6 +174,74 @@ function MembersTab() {
       setInviteError(err instanceof Error ? err.message : 'Failed to invite member.');
     } finally {
       setInviteLoading(false);
+    }
+  }
+
+  function openEditModal(member: Member) {
+    setEditingMember(member);
+    setEditFormData({
+      name: member.name || '',
+      email: member.email,
+      role: member.role,
+      status: member.status,
+      vocation: member.vocation || '',
+    });
+    setEditError(null);
+  }
+
+  function closeEditModal() {
+    setEditingMember(null);
+    setEditFormData({ name: '', email: '', role: '', status: '', vocation: '' });
+    setEditError(null);
+  }
+
+  async function handleEditSave(e: FormEvent) {
+    e.preventDefault();
+    if (!editingMember) return;
+
+    setEditError(null);
+    setEditLoading(true);
+
+    try {
+      const res = await fetch(`${API_BASE}/members/${editingMember.id}`, {
+        method: 'PUT',
+        headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(editFormData),
+      });
+
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body?.detail ?? `Error ${res.status}`);
+      }
+
+      await loadMembers();
+      closeEditModal();
+    } catch (err) {
+      setEditError(err instanceof Error ? err.message : 'Failed to update member.');
+    } finally {
+      setEditLoading(false);
+    }
+  }
+
+  async function handleDelete(memberId: number) {
+    setDeleteLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/members/${memberId}`, {
+        method: 'DELETE',
+        headers: authHeaders(),
+      });
+
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body?.detail ?? `Error ${res.status}`);
+      }
+
+      await loadMembers();
+      setDeleteConfirmId(null);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to delete member.');
+    } finally {
+      setDeleteLoading(false);
     }
   }
 
@@ -237,6 +313,7 @@ function MembersTab() {
                 <th>Role</th>
                 <th>Status</th>
                 <th>Vocation</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -256,12 +333,120 @@ function MembersTab() {
                     </span>
                   </td>
                   <td style={{ color: '#6b7280' }}>{m.vocation || '—'}</td>
+                  <td style={{ whiteSpace: 'nowrap', textAlign: 'right' }}>
+                    <button
+                      onClick={() => openEditModal(m)}
+                      className="dash-member-btn dash-member-btn--edit"
+                      title="Edit member"
+                      style={{ marginRight: '0.5rem' }}
+                    >
+                      Edit
+                    </button>
+                    {deleteConfirmId === m.id ? (
+                      <>
+                        <button
+                          onClick={() => handleDelete(m.id)}
+                          disabled={deleteLoading}
+                          className="dash-member-btn dash-member-btn--confirm"
+                          style={{ marginRight: '0.5rem' }}
+                        >
+                          {deleteLoading ? '…' : 'Confirm'}
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirmId(null)}
+                          className="dash-member-btn dash-member-btn--cancel"
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => setDeleteConfirmId(m.id)}
+                        className="dash-member-btn dash-member-btn--delete"
+                        title="Delete member"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
       </div>
+
+      {/* Edit Modal */}
+      {editingMember && (
+        <div className="dash-modal-overlay" onClick={closeEditModal}>
+          <div className="dash-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="dash-modal__title">Edit Member</h2>
+            <form onSubmit={handleEditSave} className="dash-modal__form">
+              <div className="dash-modal__field">
+                <label className="dash-modal__label">Full name</label>
+                <input
+                  type="text"
+                  className="dash-modal__input"
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                  placeholder="Full Name"
+                />
+              </div>
+              <div className="dash-modal__field">
+                <label className="dash-modal__label">Email Address</label>
+                <input
+                  type="email"
+                  className="dash-modal__input"
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                  placeholder="Email"
+                />
+              </div>
+              <div className="dash-modal__field">
+                <label className="dash-modal__label">Role</label>
+                <select
+                  className="dash-modal__input"
+                  value={editFormData.role}
+                  onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
+                >
+                  <option value="Member">Member</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
+              <div className="dash-modal__field">
+                <label className="dash-modal__label">Status</label>
+                <select
+                  className="dash-modal__input"
+                  value={editFormData.status}
+                  onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+              <div className="dash-modal__field">
+                <label className="dash-modal__label">Vocation</label>
+                <input
+                  type="text"
+                  className="dash-modal__input"
+                  value={editFormData.vocation}
+                  onChange={(e) => setEditFormData({ ...editFormData, vocation: e.target.value })}
+                  placeholder="e.g. Engineer, Teacher, Doctor"
+                />
+              </div>
+              {editError && <p className="dash-modal__error">{editError}</p>}
+              <div className="dash-modal__actions">
+                <button type="submit" className="dash-modal__save" disabled={editLoading}>
+                  {editLoading ? 'Saving…' : 'Save'}
+                </button>
+                <button type="button" className="dash-modal__cancel" onClick={closeEditModal}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

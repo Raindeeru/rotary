@@ -891,6 +891,188 @@ body {
 .dash-badge--member   { background: #dbeafe; color: #1e40af; }
 .dash-badge--inactive { background: #f3f4f6; color: #9ca3af; }
 
+/* ── Member buttons ──────────────────────────────────── */
+.dash-member-btn {
+  border-radius: 0.4rem;
+  border: 1px solid;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s, border-color 0.14s;
+  height: fit-content;
+}
+
+.dash-member-btn--edit {
+  background: #f3f4f6;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.dash-member-btn--edit:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.dash-member-btn--delete {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.dash-member-btn--delete:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.dash-member-btn--confirm {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+
+.dash-member-btn--confirm:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.dash-member-btn--cancel {
+  background: #f3f4f6;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.dash-member-btn--cancel:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* ── Dashboard Modal ─────────────────────────────────── */
+.dash-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.dash-modal {
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dash-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 1.5rem;
+}
+
+.dash-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dash-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dash-modal__label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.dash-modal__input {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.88rem;
+  color: #111;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.14s, box-shadow 0.14s;
+  background: #fff;
+}
+
+.dash-modal__input:focus {
+  border-color: #111;
+  box-shadow: 0 0 0 2px rgba(17,17,17,0.08);
+}
+
+.dash-modal__input[type="email"]:focus,
+.dash-modal__input[type="text"]:focus {
+  border-color: #111;
+  box-shadow: 0 0 0 2px rgba(17,17,17,0.08);
+}
+
+.dash-modal__error {
+  font-size: 0.82rem;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  margin-top: 0.5rem;
+}
+
+.dash-modal__actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.dash-modal__save {
+  border-radius: 999px;
+  border: 1px solid #111;
+  padding: 0.55rem 1.6rem;
+  background: #111;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.14s;
+}
+
+.dash-modal__save:hover { background: #333; }
+.dash-modal__save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.dash-modal__cancel {
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  padding: 0.55rem 1.6rem;
+  background: #fff;
+  color: #374151;
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.14s, border-color 0.14s;
+}
+
+.dash-modal__cancel:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
 /* ═══════════════════════════════════════════════════════
    PROFILE TAB
    ═══════════════════════════════════════════════════════ */
