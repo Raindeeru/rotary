@@ -25,6 +25,16 @@ type Event = {
   event_type: string;
 };
 
+type Member = {
+  id: number;
+  username: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  vocation: string;
+};
+
 /* ── Status badge ─────────────────────────────────────── */
 function StatusBadge({ status }: { status: string }) {
   const cls = {
@@ -196,6 +206,117 @@ function EventsTab() {
   );
 }
 
+/* ── Members tab - FR-20: Full directory with vocation search ── */
+function MembersTab() {
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    loadMembers();
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      loadMembers();
+    }, 300); // Debounce search
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  async function loadMembers() {
+    try {
+      const url = searchTerm
+        ? `${API_BASE}/members/?vocation=${encodeURIComponent(searchTerm)}`
+        : `${API_BASE}/members/`;
+      const res = await fetch(url, { headers: authHeaders() });
+      if (res.ok) setMembers(await res.json());
+    } catch { /* ignore */ }
+    finally { setLoading(false); }
+  }
+
+  return (
+    <div className="dash-members">
+      {/* Search */}
+      <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
+        <h3 className="dash-panel__title">Search Members</h3>
+        <div style={{ maxWidth: '400px' }}>
+          <input
+            type="text"
+            placeholder="Search by vocation (e.g. Engineer, Teacher)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.55rem 0.75rem',
+              border: '1px solid #d1d5db',
+              borderRadius: '0.5rem',
+              fontSize: '0.88rem',
+              color: '#111',
+              fontFamily: 'inherit',
+              outline: 'none',
+              transition: 'border-color 0.14s, box-shadow 0.14s',
+            }}
+            onFocus={(e) => {
+              e.target.style.borderColor = '#111';
+              e.target.style.boxShadow = '0 0 0 2px rgba(17,17,17,0.08)';
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = '#d1d5db';
+              e.target.style.boxShadow = 'none';
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Members table */}
+      <div className="dash-panel">
+        <h3 className="dash-panel__title">Member Directory</h3>
+        {loading ? (
+          <p className="dash-panel__empty">Loading…</p>
+        ) : members.length === 0 ? (
+          <p className="dash-panel__empty">
+            {searchTerm ? 'No members found matching your search.' : 'No members found.'}
+          </p>
+        ) : (
+          <table className="dash-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Vocation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {members.map((m) => (
+                <tr key={m.id}>
+                  <td>{m.name || '—'}</td>
+                  <td style={{ color: '#6b7280' }}>{m.username}</td>
+                  <td>{m.email}</td>
+                  <td>
+                    <span className={`dash-badge ${m.role === 'Admin' ? 'dash-badge--admin' : 'dash-badge--member'}`}>
+                      {m.role}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`dash-badge ${m.status === 'Active' ? 'dash-badge--completed' : 'dash-badge--inactive'}`}>
+                      {m.status}
+                    </span>
+                  </td>
+                  <td style={{ color: '#6b7280' }}>{m.vocation || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ── Placeholder tab ──────────────────────────────────── */
 function PlaceholderTab({ name }: { name: string }) {
   return (
@@ -222,8 +343,13 @@ export function MemberDashboardPage() {
               <p className="dashboard__subtitle">Here's a summary of the club's latest activity.</p>
               <HomeTab />
             </>
-          )}
-          {activeTab === 'projects' && (
+          )}          {activeTab === 'members' && (
+            <>
+              <h1 className="dashboard__title">Members</h1>
+              <p className="dashboard__subtitle">View the complete member directory and search by vocation.</p>
+              <MembersTab />
+            </>
+          )}          {activeTab === 'projects' && (
             <>
               <h1 className="dashboard__title">Projects</h1>
               <p className="dashboard__subtitle">All ongoing and completed club projects.</p>

@@ -8,9 +8,16 @@ type HomePageProps = {
   backendError: string | null;
 };
 
+type PublicMember = {
+  name: string;
+  vocation: string;
+};
+
 export function HomePage({ backendError }: HomePageProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsError, setProjectsError] = useState<string | null>(null);
+  const [members, setMembers] = useState<PublicMember[]>([]);
+  const [membersError, setMembersError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -19,6 +26,18 @@ export function HomePage({ backendError }: HomePageProps) {
       .catch((err: unknown) => {
         if (!cancelled)
           setProjectsError(err instanceof Error ? err.message : 'Unable to load projects.');
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('http://localhost:8000/members/public')
+      .then((res) => res.json())
+      .then((data) => { if (!cancelled) setMembers(data); })
+      .catch((err: unknown) => {
+        if (!cancelled)
+          setMembersError(err instanceof Error ? err.message : 'Unable to load member directory.');
       });
     return () => { cancelled = true; };
   }, []);
@@ -62,6 +81,34 @@ export function HomePage({ backendError }: HomePageProps) {
                 />
               ))
             )}
+          </div>
+        )}
+      </section>
+
+      {/* Members Directory - FR-19: Public access to basic directory */}
+      <section className="section">
+        <h2 className="section__title">Our Members</h2>
+        {membersError ? (
+          <p style={{ color: '#b91c1c', fontSize: '0.88rem' }}>{membersError}</p>
+        ) : members.length === 0 ? (
+          <p style={{ color: '#6b7280', fontSize: '0.88rem' }}>Member directory is currently unavailable.</p>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
+            {members.map((member, index) => (
+              <div key={index} style={{
+                padding: '1rem',
+                border: '1px solid #e5e7eb',
+                borderRadius: '0.5rem',
+                background: '#fff'
+              }}>
+                <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', fontWeight: '600', color: '#111' }}>
+                  {member.name}
+                </h3>
+                <p style={{ margin: 0, fontSize: '0.88rem', color: '#6b7280' }}>
+                  {member.vocation || 'Member'}
+                </p>
+              </div>
+            ))}
           </div>
         )}
       </section>

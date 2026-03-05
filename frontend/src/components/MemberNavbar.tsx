@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
-export type MemberTab = 'home' | 'projects' | 'events' | 'profile';
+export type MemberTab = 'home' | 'members' | 'projects' | 'events' | 'profile';
 
 const TABS: { id: MemberTab; label: string }[] = [
   { id: 'home',     label: 'Home' },
+  { id: 'members',  label: 'Members' },
   { id: 'projects', label: 'Projects' },
   { id: 'events',   label: 'Events' },
   { id: 'profile',  label: 'Profile' },
