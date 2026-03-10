@@ -2,8 +2,11 @@ import uvicorn
 from api.api import get_app
 from database.database import create_tables
 import asyncio
+from fastapi.staticfiles import StaticFiles
 
 app = get_app()
+
+app.mount("/static", StaticFiles(directory="uploads"), name="static")
 
 
 def main():

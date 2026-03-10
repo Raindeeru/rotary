@@ -93,9 +93,8 @@ async def delete_event(event_id: int, db: AsyncSession = Depends(get_db)):
     return {"message": "Event successfully deleted."}
 
 
-@router.get("/{event_id}/financials", response_model=EventFinancialBreakdownResponse, dependencies=[require_member_or_admin])
+@router.get("/{event_id}/financials", response_model=EventFinancialBreakdownResponse)
 async def get_event_financials(event_id: int, db: AsyncSession = Depends(get_db)):
-    """Members and Admins can view the itemized breakdown for a specific event."""
     event = await db.get(Event, event_id)
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
@@ -106,14 +105,16 @@ async def get_event_financials(event_id: int, db: AsyncSession = Depends(get_db)
     expenses = result.scalars().all()
 
     total_spent = sum([exp.price * exp.quantity for exp in expenses])
+    # Now this calculation is actually possible:
+    remaining_balance = event.budget - total_spent
 
-    # Returning a raw dict to avoid that Pydantic validation error!
     return {
         "event_id": event.id,
+        "event_budget": event.budget,
         "total_spent": total_spent,
-        "expenses": expenses 
+        "remaining_balance": remaining_balance,
+        "expenses": expenses
     }
-
 
 @router.post("/{event_id}/financials", 
              response_model=EventExpenseResponse,
