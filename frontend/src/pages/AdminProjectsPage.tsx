@@ -277,11 +277,7 @@ export function AdminProjectsPage() {
       <div className="proj-detail">
         <div
           className="proj-detail__banner"
-<<<<<<< HEAD
           style={selected.image_path ? { backgroundImage: `url(${getImageUrl(selected.image_path)})` } : undefined}
-=======
-          style={selected.image_path ? { backgroundImage: `url(${selected.image_path})` } : undefined}
->>>>>>> 28245451a16c3732ba33a11ec1b47f5a0a8b7021
           >
           <div className="proj-detail__banner-inner">
             <button className="proj-detail__back" onClick={() => setSelected(null)}>← Back</button>
@@ -377,11 +373,7 @@ export function AdminProjectsPage() {
               <label className="proj-modal__label">Project Photo
                 <div className="proj-modal__photo-upload">
                   {selected.image_path && (
-<<<<<<< HEAD
                       <img src={getImageUrl(selected.image_path)} className="proj-modal__photo-preview" alt="Project" />
-=======
-                      <img src={`${selected.image_path}`} className="proj-modal__photo-preview" alt="Project" />
->>>>>>> 28245451a16c3732ba33a11ec1b47f5a0a8b7021
                   )}
                   <label className="proj-modal__photo-btn">
                       {selected.image_path ? 'Change Photo' : 'Upload Photo'}
@@ -526,11 +518,7 @@ export function AdminProjectsPage() {
             {p.image_path && (
                 <div 
                 className="proj-card__img" 
-<<<<<<< HEAD
                 style={{ backgroundImage: `url(${getImageUrl(p.image_path)})` }} 
-=======
-                style={{ backgroundImage: `url(${p.image_path})` }} 
->>>>>>> 28245451a16c3732ba33a11ec1b47f5a0a8b7021
                 />
             )}
             <div className="proj-card__title">{p.title}</div>
