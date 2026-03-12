@@ -1,5 +1,7 @@
-import { useEffect, useState, FormEvent } from 'react';
-import { AdminNavbar, AdminTab } from '../components/AdminNavbar';
+import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
+import { AdminNavbar } from '../components/AdminNavbar';
+import type { AdminTab } from '../components/AdminNavbar';
 import { ProfileTab } from '../components/ProfileTab';
 import { AdminProjectsPage } from './AdminProjectsPage';
 import { AdminEventsPage } from './AdminEventsPage';
@@ -452,15 +454,15 @@ function MembersTab() {
 }
 
 /* ── Placeholder tab ──────────────────────────────────── */
-function PlaceholderTab({ name }: { name: string }) {
-  return (
-    <div className="dash-placeholder">
-      <span className="dash-placeholder__icon">🚧</span>
-      <h2 className="dash-placeholder__title">{name}</h2>
-      <p className="dash-placeholder__sub">This section is coming soon.</p>
-    </div>
-  );
-}
+// function PlaceholderTab({ name }: { name: string }) {
+//   return (
+//     <div className="dash-placeholder">
+//       <span className="dash-placeholder__icon">🚧</span>
+//       <h2 className="dash-placeholder__title">{name}</h2>
+//       <p className="dash-placeholder__sub">This section is coming soon.</p>
+//     </div>
+//   );
+// }
 
 /* ── Main dashboard ───────────────────────────────────── */
 export function AdminDashboardPage() {

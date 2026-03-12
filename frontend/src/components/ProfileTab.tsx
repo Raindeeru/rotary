@@ -1,4 +1,5 @@
-import { useEffect, useState, FormEvent } from 'react';
+import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
 import { API_BASE } from '../lib/api';
 
 function getToken() { return localStorage.getItem('rotary_access_token') ?? ''; }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '../components/Card';
-import { listProjectsRequest, Project } from '../lib/api';
+import { listProjectsRequest } from '../lib/api';
+import type { Project } from '../lib/api';
 
 type HomePageProps = {
   backendStatus: { 'Connection Status'?: string } | null;

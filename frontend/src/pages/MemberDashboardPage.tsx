@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { MemberNavbar, MemberTab } from '../components/MemberNavbar';
+import { MemberNavbar } from '../components/MemberNavbar';
+import type { MemberTab } from '../components/MemberNavbar';
 import { ProfileTab } from '../components/ProfileTab';
 import { AboutPage } from './AboutPage';
 import { API_BASE } from '../lib/api';
@@ -318,15 +319,15 @@ function MembersTab() {
 }
 
 /* ── Placeholder tab ──────────────────────────────────── */
-function PlaceholderTab({ name }: { name: string }) {
-  return (
-    <div className="dash-placeholder">
-      <span className="dash-placeholder__icon">🚧</span>
-      <h2 className="dash-placeholder__title">{name}</h2>
-      <p className="dash-placeholder__sub">This section is coming soon.</p>
-    </div>
-  );
-}
+// function PlaceholderTab({ name }: { name: string }) {
+//   return (
+//     <div className="dash-placeholder">
+//       <span className="dash-placeholder__icon">🚧</span>
+//       <h2 className="dash-placeholder__title">{name}</h2>
+//       <p className="dash-placeholder__sub">This section is coming soon.</p>
+//     </div>
+//   );
+// }
 
 /* ── Main member dashboard ────────────────────────────── */
 export function MemberDashboardPage() {
